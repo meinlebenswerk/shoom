@@ -1,8 +1,8 @@
 #include <nan.h>
-#include "videosink.h"
+#include "node_shoom.h"
 
 void InitAll(v8::Local<v8::Object> exports) {
-    VideoSink::Init(exports);
+    node_shoom::Shm::Init(exports);
 }
 
 NODE_MODULE(capsule_videosink, InitAll)

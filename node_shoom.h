@@ -5,13 +5,15 @@
 #include <nan.h>
 #include <shoom.h>
 
-class VideoSink : public Nan::ObjectWrap {
+namespace node_shoom {
+
+class Shm : public Nan::ObjectWrap {
     public:
         static void Init(v8::Local<v8::Object> exports);
 
     private:
-        explicit VideoSink(std::string path, size_t size);
-        ~VideoSink();
+        explicit Shm(std::string path, size_t size);
+        ~Shm();
 
         static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
         static void Create(const Nan::FunctionCallbackInfo<v8::Value>& info);
@@ -22,3 +24,5 @@ class VideoSink : public Nan::ObjectWrap {
 
         shoom::Shm *shm_;
 };
+
+}

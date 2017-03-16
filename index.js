@@ -1,1 +1,1 @@
-module.exports = require('bindings')('capsule_videosink');
+module.exports = require('bindings')('node_shoom');
