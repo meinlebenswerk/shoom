@@ -1,0 +1,17 @@
+
+stages:
+  - test
+
+test-linux-386:
+  stage: test
+  tags:
+    - docker-capsule-32
+  script:
+    - npm i
+
+test-macos-amd64:
+  stage: test
+  tags:
+    - docker-capsule-64
+  script:
+    - npm i

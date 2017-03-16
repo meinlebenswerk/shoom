@@ -2,8 +2,8 @@
 
 Nan::Persistent<v8::Function> VideoSink::constructor;
 
-VideoSink::VideoSink(char *path_in,
-    int width_in, int height_in, int cotsponents_in) {
+VideoSink::VideoSink(char *path, int num_pages, size_t page_size) :
+    num_pages_(num_pages), page_size_(page_size) {
     // muffin
 }
 
@@ -39,8 +39,18 @@ void VideoSink::New(const Nan::FunctionCallbackInfo<v8::Value>& info) {
 
     auto opts = Nan::To<v8::Object>(info[0]).ToLocalChecked();
 
-    VideoSink *sink = new VideoSink(
-        "/capsule.shm", 800, 600, 4);
+    auto page_size = Nan::Get(opts, Nan::New("page_size").ToLocalChecked()).ToLocalChecked();
+    if (page_size->IsUndefined()) {
+        Nan::ThrowError("VideoSink constructor: opts must have a 'page_size' property that's a number");
+        return;
+    }
+
+    auto page_count = Nan::Get(opts, Nan::New("page_count").ToLocalChecked()).ToLocalChecked();
+    if (page_count->IsUndefined()) {
+        Nan::ThrowError("VideoSink constructor: opts must have a 'page_count' property that's a number");
+    }
+
+    VideoSink *sink = new VideoSink("/capsule.shm", 2, 800 * 600 * 4);
     sink->Wrap(info.This());
     info.GetReturnValue().Set(info.This());
 }
