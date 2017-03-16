@@ -7,7 +7,7 @@ test-windows-amd64:
   tags:
     - msbuild
   script:
-    - echo using the magic invocation
+    # simply using 'npm i' makes the script stop there.
     - cmd /c npm i
     - npm t
 
