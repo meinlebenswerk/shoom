@@ -7,7 +7,7 @@ test-windows-amd64:
   tags:
     - msbuild
   script:
-    - npm i && npm t
+    - npm i & npm t
 
 test-linux-386:
   stage: test
