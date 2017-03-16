@@ -2,6 +2,13 @@
 stages:
   - test
 
+test-windows-amd64:
+  stage: test
+  tags:
+    - msbuild
+  script:
+    - npm i
+
 test-linux-386:
   stage: test
   tags:
@@ -13,5 +20,12 @@ test-macos-amd64:
   stage: test
   tags:
     - docker-capsule-64
+  script:
+    - npm i
+
+test-macos-amd64:
+  stage: test
+  tags:
+    - darwin
   script:
     - npm i
