@@ -8,7 +8,7 @@ test-windows-amd64:
     - msbuild
   script:
     - echo hello
-    - npm i
+    - cmd /c npm i
     - echo so far so good
     - npm t
     - echo all done now
