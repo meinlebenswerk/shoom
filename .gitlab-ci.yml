@@ -7,11 +7,9 @@ test-windows-amd64:
   tags:
     - msbuild
   script:
-    - echo hello
+    - echo using the magic invocation
     - cmd /c npm i
-    - echo so far so good
     - npm t
-    - echo all done now
 
 test-linux-386:
   stage: test
