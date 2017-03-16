@@ -14,14 +14,14 @@ test-linux-386:
   tags:
     - docker-capsule-32
   script:
-    - npm i
+    - npm i --unsafe-perm
 
-test-macos-amd64:
+test-linux-amd64:
   stage: test
   tags:
     - docker-capsule-64
   script:
-    - npm i
+    - npm i --unsafe-perm
 
 test-macos-amd64:
   stage: test
