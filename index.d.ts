@@ -24,7 +24,7 @@ export interface ShmConstructorOpts {
   size: number;
 }
 
-export interface Shm {
+export declare class Shm {
   /**
    * Sets values for an shm object that's about to be created or opened.
    * If you're expecting another process to open your SHM object, don't forget
@@ -80,5 +80,3 @@ export interface Shm {
    */
   read(offset: number, destination: Buffer);
 }
-
-export default Shm;
