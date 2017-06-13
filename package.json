@@ -4,6 +4,7 @@
   "homepage": "https://github.com/itchio/node-shoom",
   "description": "cross-platform shared memory objects for node.js",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "node test/index.js"
   },
