@@ -1,16 +1,10 @@
-# capsule-videosink
+# node-shoom
 
-capsule-videosink is a nodejs addon that plays a role in sending
-video frames from an electron app to [capsule](https://github.com/itchio/capsule).
+node-shoom exposes the functionality of [shoom](https://github.com/itchio/shoom) to
+node.js apps, such as: creating shared memory objets, writing to them and reading from them.
 
-It doesn't concern itself with the capsule wire format over named pipes,
-it only deals with the "copying frame buffers to shared memory" part.
-
-## Status
-
-This repository is currently in research mode, which means it's probably
-not useful yet.
+It builds on Linux, macOS, and Windows.
 
 ## License
 
-capsule-videosink is released under the MIT license, see the `LICENSE` file.
+node-shoom is released under the MIT license, see the `LICENSE` file.
