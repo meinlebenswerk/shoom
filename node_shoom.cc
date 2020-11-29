@@ -1,4 +1,3 @@
-
 #include "node_shoom.h"
 
 namespace node_shoom {
@@ -18,7 +17,7 @@ void Shm::Init(v8::Local<v8::Object> exports) {
 
     // Prepare constructor template
     v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
-    tpl->SetClassName(Nan::New("Shm").ToLocalChecked());
+    tpl->SetClassName(Nan::New<v8::String>("Shm").ToLocalChecked());
     tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
     // Prototype
@@ -27,8 +26,12 @@ void Shm::Init(v8::Local<v8::Object> exports) {
     Nan::SetPrototypeMethod(tpl, "write", Write);
     Nan::SetPrototypeMethod(tpl, "read", Read);
 
-    constructor.Reset(tpl->GetFunction());
-    exports->Set(Nan::New("Shm").ToLocalChecked(), tpl->GetFunction());
+    v8::Local<v8::Function> function = Nan::GetFunction(tpl).ToLocalChecked();
+    constructor.Reset(function);
+    
+    Nan::Set(exports, Nan::New("Shm").ToLocalChecked(),
+      Nan::GetFunction(tpl).ToLocalChecked());
+    // exports->Set(Nan::New("Shm").ToLocalChecked(), Nan::GetFunction(tpl), NULL);
 }
 
 void Shm::New(const Nan::FunctionCallbackInfo<v8::Value>& info) {
@@ -61,7 +64,7 @@ void Shm::New(const Nan::FunctionCallbackInfo<v8::Value>& info) {
 
     Shm *obj = new Shm(
         path_string,
-        static_cast<size_t>(size->NumberValue())
+        static_cast<size_t>(size->Uint32Value(Nan::GetCurrentContext()).ToChecked())
     );
     obj->Wrap(info.This());
     info.GetReturnValue().Set(info.This());
@@ -75,7 +78,6 @@ void Shm::Create(const Nan::FunctionCallbackInfo<v8::Value>& info) {
         return;
     }
 }
-
 void Shm::Open(const Nan::FunctionCallbackInfo<v8::Value>& info) {
     Shm* obj = ObjectWrap::Unwrap<Shm>(info.Holder());
     auto ret = obj->shm_->Open();
@@ -98,7 +100,7 @@ void Shm::Write(const Nan::FunctionCallbackInfo<v8::Value>& info) {
         return;
     }
 
-    ptrdiff_t offset = static_cast<ptrdiff_t>(info[0]->NumberValue());
+    ptrdiff_t offset = static_cast<ptrdiff_t>(info[0]->Int32Value(Nan::GetCurrentContext()).ToChecked());
 
     Nan::TypedArrayContents<uint8_t> contents{info[1]};
 
@@ -120,7 +122,7 @@ void Shm::Read(const Nan::FunctionCallbackInfo<v8::Value>& info) {
         return;
     }
 
-    ptrdiff_t offset = static_cast<ptrdiff_t>(info[0]->NumberValue());
+    ptrdiff_t offset = static_cast<ptrdiff_t>(info[0]->Int32Value(Nan::GetCurrentContext()).ToChecked());
 
     Nan::TypedArrayContents<uint8_t> contents{info[1]};
 
