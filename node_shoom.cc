@@ -25,6 +25,7 @@ void Shm::Init(v8::Local<v8::Object> exports) {
     Nan::SetPrototypeMethod(tpl, "open", Open);
     Nan::SetPrototypeMethod(tpl, "write", Write);
     Nan::SetPrototypeMethod(tpl, "read", Read);
+    Nan::SetPrototypeMethod(tpl, "readCyclic", ReadCyclic);
 
     v8::Local<v8::Function> function = Nan::GetFunction(tpl).ToLocalChecked();
     constructor.Reset(function);
@@ -129,6 +130,41 @@ void Shm::Read(const Nan::FunctionCallbackInfo<v8::Value>& info) {
     char *dst = reinterpret_cast<char*>(*contents);
     char *src = reinterpret_cast<char*>(obj->shm_->Data() + offset);
     memcpy(dst, src, contents.length());
+}
+
+/* Ringbuffer read */
+void Shm::ReadCyclic(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+    Shm* obj = ObjectWrap::Unwrap<Shm>(info.Holder());
+
+    if (!info[0]->IsNumber()) {
+        Nan::ThrowError("First argument to write must be a number (offset)");
+        return;
+    }
+
+    if (!info[1]->IsArrayBufferView()) {
+        Nan::ThrowError("Second argument to write must be an array buffer view (dst)");
+        return;
+    }
+
+    ptrdiff_t offset = static_cast<ptrdiff_t>(info[0]->Int32Value(Nan::GetCurrentContext()).ToChecked());
+
+    Nan::TypedArrayContents<uint8_t> contents{info[1]};
+
+    const size_t copySize = contents.length();
+    char *dst = reinterpret_cast<char*>(*contents);
+    char *src = reinterpret_cast<char*>(obj->shm_->Data());
+
+    if(((copySize + offset) > obj->shm_->Size()) ) {
+        const size_t copyBefore = obj->shm_->Size() - offset;
+        const size_t copyAfter = copySize - copyBefore;
+
+        memcpy(dst, src + offset, copyBefore);
+        memcpy(dst + copyBefore, src, copyAfter);
+
+        return;
+    }
+    
+    memcpy(dst, src + offset, copySize);
 }
 
 }

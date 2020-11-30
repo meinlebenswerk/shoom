@@ -20,6 +20,7 @@ class Shm : public Nan::ObjectWrap {
         static void Open(const Nan::FunctionCallbackInfo<v8::Value>& info);
         static void Write(const Nan::FunctionCallbackInfo<v8::Value>& info);
         static void Read(const Nan::FunctionCallbackInfo<v8::Value>& info);
+        static void ReadCyclic(const Nan::FunctionCallbackInfo<v8::Value>& info);
         static Nan::Persistent<v8::Function> constructor;
 
         shoom::Shm *shm_;
