@@ -105,9 +105,25 @@ void Shm::Write(const Nan::FunctionCallbackInfo<v8::Value>& info) {
 
     Nan::TypedArrayContents<uint8_t> contents{info[1]};
 
-    char *dst = reinterpret_cast<char*>(obj->shm_->Data() + offset);
+    const size_t copySize = contents.length();
+    char *dst = reinterpret_cast<char*>(obj->shm_->Data());
     char *src = reinterpret_cast<char*>(*contents);
-    memcpy(dst, src, contents.length());
+
+    if(((copySize + offset) > obj->shm_->Size()) ) {
+        const size_t copyBefore = obj->shm_->Size() - offset;
+        const size_t copyAfter = copySize - copyBefore;
+
+        memcpy(dst + offset, src, copyBefore);
+        memcpy(dst, src + copyBefore, copyAfter);
+
+        return;
+    }
+    
+    // memcpy(dst, src, copySize);
+
+    // char *dst = reinterpret_cast<char*>(obj->shm_->Data() + offset);
+    // char *src = reinterpret_cast<char*>(*contents);
+    memcpy(dst + offset, src, contents.length());
 }
 
 void Shm::Read(const Nan::FunctionCallbackInfo<v8::Value>& info) {
